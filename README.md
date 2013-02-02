@@ -1,4 +1,4 @@
 NSIShim
 =======
 
-A specification for side-by-side (shim) installs and upgrades, and a reference implementation using NSIS for the installer and C# for the app/client
+A specification for side-by-side (shim) installs and upgrades, and a reference implementation using NSIS for the installer and C# for the app/client. Based loosely on [Shimmer](https://github.com/github/Shimmer).
