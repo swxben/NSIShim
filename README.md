@@ -18,10 +18,10 @@ The entire application including all dependencies should be included in the appl
 
 The installer is a standalone executable file (for example an executable generated from an NSIS script) that:
 
-1. installs the entire application to `%APPDATA%\application_id\version` (optionally to `%APPDATA%\author\application_id\version`), then
-2. creates or overwrites a shortcut to the application executable (`%APPDATA%\application_id\version\application.exe`) to (`%APPDATA%\application_id\application.lnk`).
+1. Install the entire application to `%APPDATA%\application_id\version` (optionally to `%APPDATA%\author\application_id\version`)
+2. Create or overwrite a shortcut to the application executable (`%APPDATA%\application_id\version\application.exe`) to `%APPDATA%\application_id\application.lnk`.
 	- if the application includes multiple user entry points (eg. a POS terminal and a financial controller terminal for the same system) then multiple shortcuts could be created at `%APPDATA%\application_id\`
-3. Optionally creates entries in the Start menu or Startup menu linking to the entry points created at `%APPDATA%\application_id`
+3. Optionally create entries in the Start menu or Startup menu linking to the entry points created at `%APPDATA%\application_id\*.lnk`
 
 This allows side-by-side installation of an new version of an application while an older version of the same application is still running.
 
