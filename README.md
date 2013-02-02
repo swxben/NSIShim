@@ -22,8 +22,9 @@ The installer is a standalone executable file (for example an executable generat
 
 1. Install the entire application to `%APPDATA%\application_id\version` (optionally to `%APPDATA%\author\application_id\version`)
 2. Create or overwrite a shortcut to the application executable (`%APPDATA%\application_id\version\application.exe`) to `%APPDATA%\application_id\application.lnk`.
+	- For example: `%APPDATA%\MyCoolApp\1.0.0\MyCoolApp.exe`, `%APPDATA%\MyCoolApp\MyCoolApp.lnk`
 	- if the application includes multiple user entry points (eg. a POS terminal and a financial controller terminal for the same system) then multiple shortcuts could be created at `%APPDATA%\application_id\`
-	- this spec doesn't specify what the shortcuts are called, how many are created, etc. This is totally up to the installer.
+	- this spec doesn't specify what the shortcuts are called, how many are created, nesting of paths up to the `application_id`, etc. This is totally up to the installer.
 3. Optionally create entries in the Start menu or Startup menu linking to the entry points created at `%APPDATA%\application_id\*.lnk`
 
 This allows side-by-side installation of an new version of an application while an older version of the same application is still running.
@@ -31,7 +32,7 @@ This allows side-by-side installation of an new version of an application while 
 
 #### Shared files
 
-Each full installer must not rely on the existence of a previous version of the application - it should create a full execution environment from scratch. That said, there could be files that have to be migrated from version to version, such as SQLite databases or configuration files. If it is appropriate to store these files with the application (rather than in user-specified locations) they can be stored in a `SHARED` folder at `%APPDATA%\application_id\SHARED`. Migration for these files should be done in the installation script or by the application on opening the file. The `SHARED` folder should be created by the installation script if it does not exist, i.e. the xShim implementation is not responsible for creating or maintaining the `SHARED` folder, but any other folders created within `%APPDATA%\application_id` (eg `%APPDATA%\Configuration\...`) may be broken by future changes to the xShim specification.
+Each full installer must not rely on the existence of a previous version of the application - it should create a full production environment. That said, there could be files that have to be migrated from version to version, such as SQLite databases or configuration files. If it is appropriate to store these files with the application (rather than in user-specified locations) they can be stored in a `SHARED` folder at `%APPDATA%\application_id\SHARED`. Migration for these files should be done in the installation script or by the application on opening the file. The migration process is not covered by this specification. The `SHARED` folder should be created by the installation script if it does not exist, i.e. the xShim implementation is not responsible for creating or maintaining the `SHARED` folder, but any other folders created within `%APPDATA%\application_id` (eg `%APPDATA%\Configuration\...`) may be broken by future changes to the xShim specification.
 
 
 ### Release layout (file share or URL)
@@ -43,22 +44,23 @@ A file named `RELEASES` must be present at the release path. This file contains 
 	94689fede03fed7ab59c24337673a27837f0c3ec  MyCoolApp-1.0.0.exe  1004502
 	3a2eadd15dd984e4559f2b4d790ec8badaeb6a39  MyCoolApp-1.1.0.exe  1040561
 
+The version is extracted from the installer file name using the convention `ApplicationId-{version}.ext`. No further analysis is done on the version at this point as there is an assumption that the newest version is at the bottom. This is unlikely to change as semantic versioning will be supported by putting pre-release versions in multiple `RELEASE` files for alternate release channels.
 
 ### Application features / in-process endpoints
 
 #### Check for updates
 
-An update check could be triggered by any of the following optional conditions:
+An update check could be triggered by any of the following conditions:
 
 - A one-off check when the application is started
 - A check initiated by the user
 - A poll check, for example every 15 minutes
 
-The updater implementation should provide support for any of these conditions by way of exposing a `CheckForUpdates` method and a `StartPollForUpdatesEvery(TimeSpan)` method (or similar).
+The updater implementation should provide support for any of these conditions by way of exposing a `CheckForUpdates` method and a `StartPollForUpdatesEvery(TimeSpan)` method (or similar). Polling can be disabled by a `StopPollForUpdates` method - this could be used if the application goes offline or upgrade polling is disabled by the user.
 
 The `CheckForUpdates` method should return true if there are updates that can be applied. It should also cache the metadata for available updates at the time of the check.
 
-**TODO** when setting up poll should be able to flag auto shim installs
+**TODO** when setting up poll should be able to flag auto shim installs, on either `CheckForUpdates` or `StartPoll`.
 
 #### Get available updates
 
@@ -92,4 +94,4 @@ This could be implemented as a non-breaking change by having multiple `RELEASE` 
 
 ### Release notes
 
-I don't want to mess around with embedding release notes in the EXE or using NuGet or anything else. Probably the easiest way would be to use a naming convention to link release notes to a release. So for `MyCoolApp-1.0.0.exe` it could look for `MyCoolApp-1.0.0.txt`.
+I don't want to mess around with embedding release notes in the EXE or using NuGet or anything else. Probably the easiest way would be to use a naming convention to link release notes to a release. So for `MyCoolApp-1.0.0.exe` it could look for `MyCoolApp-1.0.0.txt` or `MyCoolApp-1.0.0.md`.
