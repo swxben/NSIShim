@@ -11,7 +11,7 @@ Hmm. I think the specification could be called xShim, with the NSIS/C# reference
 
 ### Application
 
-The entire application including all dependencies should be included in the application. Specifically for a .NET application the entire application should be compiled to `project\bin\Release\....`. Dependencies that can't be included with the application (eg the .NET framework) should be bootstrapped by the installer script.
+The entire application including all dependencies should be included in the application. For example, a .NET application would be compiled to `project\bin\Release\....` which is bundled up in the install script. Dependencies that can't be included with the install script (eg the .NET framework) should be bootstrapped by the installer script. In other words, this specification does not build in any support for managing application dependencies.
 
 
 ### Installer / bootstrap
