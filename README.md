@@ -6,10 +6,12 @@ A specification for side-by-side (shim) installs and upgrades, and a reference i
 
 ## Specification
 
+Hmm. I think the specification could be called xShim, with the NSIS/C# reference implementation called NSIShim. TIME TO TAKE OVER THE WURLD.
+
 
 ### Application
 
-The entire application including all dependencies should be included in the application. Specifically for a .NET application the entire application should be compiled to `project\bin\Release\..`. Dependencies that can't be included with the application (eg the .NET framework) should be bootstrapped by the installer script.
+The entire application including all dependencies should be included in the application. Specifically for a .NET application the entire application should be compiled to `project\bin\Release\....`. Dependencies that can't be included with the application (eg the .NET framework) should be bootstrapped by the installer script.
 
 
 ### Installer / bootstrap
@@ -21,9 +23,15 @@ The installer is a standalone executable file (for example an executable generat
 1. Install the entire application to `%APPDATA%\application_id\version` (optionally to `%APPDATA%\author\application_id\version`)
 2. Create or overwrite a shortcut to the application executable (`%APPDATA%\application_id\version\application.exe`) to `%APPDATA%\application_id\application.lnk`.
 	- if the application includes multiple user entry points (eg. a POS terminal and a financial controller terminal for the same system) then multiple shortcuts could be created at `%APPDATA%\application_id\`
+	- this spec doesn't specify what the shortcuts are called, how many are created, etc. This is totally up to the installer.
 3. Optionally create entries in the Start menu or Startup menu linking to the entry points created at `%APPDATA%\application_id\*.lnk`
 
 This allows side-by-side installation of an new version of an application while an older version of the same application is still running.
+
+
+#### Shared files
+
+Each full installer must not rely on the existence of a previous version of the application - it should create a full execution environment from scratch. That said, there could be files that have to be migrated from version to version, such as SQLite databases or configuration files. If it is appropriate to store these files with the application (rather than in user-specified locations) they can be stored in a `SHARED` folder at `%APPDATA%\application_id\SHARED`. Migration for these files should be done in the installation script or by the application on opening the file. The `SHARED` folder should be created by the installation script if it does not exist, i.e. the xShim implementation is not responsible for creating or maintaining the `SHARED` folder, but any other folders created within `%APPDATA%\application_id` (eg `%APPDATA%\Configuration\...`) may be broken by future changes to the xShim specification.
 
 
 ### Release layout (file share or URL)
@@ -38,7 +46,27 @@ A file named `RELEASES` must be present at the release path. This file contains 
 
 ### Application features / in-process endpoints
 
-TBA
+#### Check for updates
+
+An update check could be triggered by any of the following optional conditions:
+
+- A one-off check when the application is started
+- A check initiated by the user
+- A poll check, for example every 15 minutes
+
+The updater implementation should provide support for any of these conditions by way of exposing a `CheckForUpdates` method and a `StartPollForUpdatesEvery(TimeSpan)` method (or similar).
+
+The `CheckForUpdates` method should return true if there are updates that can be applied. It should also cache the metadata for available updates at the time of the check.
+
+**TODO** when setting up poll should be able to flag auto shim installs
+
+#### Get available updates
+
+**TODO** iterate cached updates
+
+#### Apply available updates
+
+**TODO** shim install each update - maybe just latest update?? how would this work with diffs?
 
 
 ## Future improvements
@@ -60,3 +88,8 @@ This could be implemented as a non-breaking change by having multiple `RELEASE` 
 - the existing `RELEASE` file contains normal versions only
 - have a `RELEASE.rc` file to satisfy users on an RC channel
 - have a `RELEASE.nightly` file hooked up to a CI server for users that want bleeding edge updates
+
+
+### Release notes
+
+I don't want to mess around with embedding release notes in the EXE or using NuGet or anything else. Probably the easiest way would be to use a naming convention to link release notes to a release. So for `MyCoolApp-1.0.0.exe` it could look for `MyCoolApp-1.0.0.txt`.
