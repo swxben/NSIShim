@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 call "%VS100COMNTOOLS%vsvars32.bat"
 
 msbuild.exe /ToolsVersion:4.0 "nsishim.sln" /p:configuration=Release

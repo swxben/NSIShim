@@ -1,5 +1,7 @@
 ; NSIS script for the MyCoolApp installer
 
+RequestExecutionLevel user
+
 !include "FileFunc.nsh"
 
 ; The name of the installer
@@ -7,6 +9,22 @@ Name "MyCoolApp"
 
 ; The file to write
 OutFile "mycoolapp-${version}.exe"
+
+; Version info
+; VIProductVersion needs to be x.x.x.x so it may have to be fixed to eg 1.0.0.0 for versioning systems that can't be adapted
+VIProductVersion ${version}.0
+VIAddVersionKey ProductName "MyCoolApp"
+VIAddVersionKey Comments "MyCoolApp installer"
+VIAddVersionKey CompanyName "Software by Ben Pty Ltd"
+VIAddVersionKey LegalCopyright "CC BY-SA 3.0"
+VIAddVersionKey FileDescription "MyCoolApp NSIShim example, by SWXBEN"
+
+VIAddVersionKey FileVersion ${version}
+VIAddVersionKey ProductVersion ${version}
+
+VIAddVersionKey InternalName "MyCoolApp NSIShim example"
+VIAddVersionKey LegalTrademarks "CC BY-SA 3.0"
+VIAddVersionKey OriginalFilename "mycoolapp-${version}.exe"
 
 ; The default installation directory
 InstallDir "$APPDATA\swxben\MyCoolApp\${version}"
