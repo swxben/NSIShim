@@ -7,7 +7,7 @@ call "%VS100COMNTOOLS%vsvars32.bat"
 msbuild.exe /ToolsVersion:4.0 "nsishim.sln" /p:configuration=Release
 tools\nsis-2.46\makensis.exe /NOCD /V2 /Dversion=%1 MyCoolAppInstaller.nsi
 echo MD5:
-src\calcmd5\bin\Debug\calcmd5.exe "mycoolapp-%1.exe"
+src\calcmd5\bin\Debug\calcmd5.exe "releases\mycoolapp-%1.exe"
 
 goto :done
 
