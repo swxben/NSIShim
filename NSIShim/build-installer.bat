@@ -1,6 +1,7 @@
 @echo off
 
 if /i "%1" == "" goto :help
+if not exist releases mkdir releases
 
 call "%VS100COMNTOOLS%vsvars32.bat"
 msbuild.exe /ToolsVersion:4.0 "nsishim.sln" /p:configuration=Release
