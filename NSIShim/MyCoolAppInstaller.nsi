@@ -8,7 +8,7 @@ RequestExecutionLevel user
 Name "MyCoolApp"
 
 ; The file to write
-OutFile "mycoolapp-${version}.exe"
+OutFile "releases\mycoolapp-${version}.exe"
 
 ; Version info
 ; VIProductVersion needs to be x.x.x.x so it may have to be fixed to eg 1.0.0.0 for versioning systems that can't be adapted
