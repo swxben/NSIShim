@@ -95,3 +95,23 @@ This could be implemented as a non-breaking change by having multiple `RELEASE` 
 ### Release notes
 
 I don't want to mess around with embedding release notes in the EXE or using NuGet or anything else. Probably the easiest way would be to use a naming convention to link release notes to a release. So for `MyCoolApp-1.0.0.exe` it could look for `MyCoolApp-1.0.0.txt` or `MyCoolApp-1.0.0.md`.
+
+
+## Contribute
+
+If you want to contribute to this project, start by forking the repo: <https://github.com/swxben/swxben.helpers>. Create an issue if applicable, create a branch in your fork, and create a pull request when it's ready. Thanks!
+
+### Contributors
+
+
+## Licenses
+
+All files [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/) unless otherwise specified.
+
+### Third party licenses
+
+Third party libraries or resources have been included in this project under their respective licenses.
+
+- NSIS is Copyright (C) 1995-2009 Contributors, see `NSIShim/tools/nsis-2.46/COPYING` for more details
+
+
